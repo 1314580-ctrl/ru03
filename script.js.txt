@@ -1,0 +1,48 @@
+const canvas = document.getElementById('rainCanvas');
+const ctx = canvas.getContext('2d');
+const backgroundImage = document.getElementById('backgroundImage');
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+const raindrops = [];
+
+function createRaindrop() {
+    const x = Math.random() * canvas.width;
+    const y = Math.random() * canvas.height;
+    const length = Math.random() * 20 + 10;
+    const speed = Math.random() * 5 + 2;
+    raindrops.push({ x, y, length, speed });
+}
+
+function drawRaindrop(drop) {
+    ctx.beginPath();
+    ctx.moveTo(drop.x, drop.y);
+    ctx.lineTo(drop.x, drop.y + drop.length);
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+}
+
+function updateRaindrops() {
+    raindrops.forEach(drop => {
+        drop.y += drop.speed;
+        if (drop.y > canvas.height) {
+            drop.y = -drop.length;
+        }
+    });
+}
+
+function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    updateRaindrops();
+    raindrops.forEach(drawRaindrop);
+    requestAnimationFrame(animate);
+}
+
+// Create initial raindrops
+for (let i = 0; i < 100; i++) {
+    createRaindrop();
+}
+
+animate();
